@@ -1,10 +1,10 @@
-window.addEventListener('load', function() {
+window.addEventListener('load', function () {
     let raw = '';
 
 
     const handlechange = (event) => {
         const fileReader = new FileReader();
-        
+
         fileReader.readAsText(event.target.files[0], "UTF-8");
         fileReader.onload = e => {
             const _raw = e.target.result;
@@ -15,8 +15,8 @@ window.addEventListener('load', function() {
 
     const download_json = (arr) => {
         let string_array = `[${arr.map(a => `"${a}"`).join(',')}]`;
-        var blob = new Blob([string_array], {type: "application/json;charset=utf-8"});
-        
+        var blob = new Blob([string_array], { type: "application/json;charset=utf-8" });
+
         var a = document.createElement("a");
         a.href = URL.createObjectURL(blob);
         a.download = "_converted.json";
@@ -26,14 +26,33 @@ window.addEventListener('load', function() {
 
     const convert_txt_to_json = (event) => {
         event.preventDefault();
+        let _el_div = document.createElement("div");
+        let _el_hr = document.createElement("hr");
+        _el_div.appendChild(_el_hr);
+
         let array = raw.split(/\r?\n/);
-        
+        let _el_p = document.createElement("p");
+        var node = document.createTextNode(`ARRAY LENGTH BEFORE: ${array.length}`);
+        _el_p.appendChild(node);
+        _el_div.appendChild(_el_p);
+
+        array = Array.from(new Set(array));
+
+        _el_p = document.createElement("p");
+        node = document.createTextNode(`ARRAY LENGTH AFTER: ${array.length}`);
+        _el_p.appendChild(node);
+        _el_div.appendChild(_el_p);
+
+        info_div.classList.add("vh50", "overflow-auto");
+        info_div.prepend(_el_div);
+
         download_json(array);
     }
-    
+
 
     const convert_form = document.getElementById('convert_form');
     const raw_input = document.getElementById('raw_file');
+    const info_div = document.getElementById('info-div');
 
     convert_form.addEventListener('submit', convert_txt_to_json);
     raw_input.addEventListener('change', handlechange);
