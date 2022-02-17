@@ -38,6 +38,23 @@ window.addEventListener('load', function () {
 
         array = Array.from(new Set(array));
 
+        let clean_array = array.filter(a => {
+            const ca_regex = new RegExp(/^0x[a-fA-F0-9]{40}$/g);
+            let ca = a.replace('/\s+/g', '');
+            let matches = ca.match(ca_regex);
+
+
+            if (matches != null) {
+                if (matches.length > 0) {
+                    return matches[0];
+                }
+            }
+
+            return false;
+        });
+
+        array = Array.from(new Set(clean_array));
+        console.dir(array);
         _el_p = document.createElement("p");
         node = document.createTextNode(`ARRAY LENGTH AFTER: ${array.length}`);
         _el_p.appendChild(node);
